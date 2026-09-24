@@ -3,132 +3,335 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111214">
   <title>Website Drafts</title>
-  <meta name="description" content="A gallery of website drafts and design directions to preview.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23E8380D'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='34' font-style='italic' fill='%23F7F4EE' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
+  <meta name="description" content="A few website design directions to browse, plus what people have said.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Spline+Sans+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap" rel="stylesheet">
   <style>
     :root{
-      --paper:#f4f1ea; --panel:#ffffff; --panel-hi:#fbf9f4; --ink:#1a1a1a; --muted:#6a655d;
-      --line:#ddd7ca; --line-strong:#1a1a1a; --accent:#e8380d; --accent2:#b07d1c;
-      --sans:'Archivo',system-ui,sans-serif; --serif:'Fraunces',Georgia,serif; --mono:'Spline Sans Mono',monospace;
+      --bg:#111214; --panel:#16181B; --line:#2A2E34; --line-2:#3A3F47;
+      --text:#E8E6E1; --muted:#8E949C; --faint:#5E646C; --star:#E8B04A;
+      --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+      color-scheme:dark;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
-    .wrap{max-width:1000px;margin:0 auto;padding:64px 22px 90px}
-    header{margin-bottom:34px;padding-bottom:34px;border-bottom:2px solid var(--line-strong)}
-    .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-    h1{font-family:var(--serif);font-size:clamp(2.6rem,8vw,4.6rem);font-weight:600;line-height:1;letter-spacing:-.02em}
-    h1 em{font-style:italic;color:var(--accent)}
-    .sub{color:var(--muted);font-size:1.08rem;margin-top:16px;max-width:58ch}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-    .card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .16s,border-color .16s,box-shadow .16s;text-decoration:none;color:inherit;box-shadow:0 1px 0 rgba(0,0,0,.02)}
-    .card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .thumb{height:148px;position:relative;overflow:hidden;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-    .thumb .big{font-family:var(--serif);font-style:italic;font-size:2.2rem;font-weight:500}
-    .t-paper{background:linear-gradient(135deg,#faf8f2,#e8e2d4);color:#1a1a1a}
-    .t-ink{background:linear-gradient(135deg,#22222a,#0e0e11);color:#d4cbb3}
-    .t-scrap{background:repeating-linear-gradient(45deg,#f7f4ee,#f7f4ee 10px,#efe9dc 10px,#efe9dc 20px);color:#d46a56}
-    .t-retro{background:linear-gradient(135deg,#efe9d6,#e2dcc4);color:#c65a3a}
-    .t-race{background:#0C0D0F;color:#FF5A1F}
-    .t-race svg{width:120px;height:auto}
-    .t-sketch{background:#fbf4ea;color:#d6437f}
-    .t-sketch svg{width:74px;height:74px;fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;rotate:-8deg}
-    .t-bijal{background:radial-gradient(circle at 70% 30%,#3a1f3a,#140d16);color:#d4a05c}
-    .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;flex:1}
-    .tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-    .name{font-family:var(--serif);font-size:1.3rem;font-weight:600;line-height:1.15}
-    .desc{font-size:.92rem;color:var(--muted);flex:1}
-    .go{font-family:var(--mono);font-size:.76rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-top:4px}
-    .card:hover .go{color:var(--accent2)}
-    .note{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:44px;border-top:1px solid var(--line);padding-top:20px;line-height:1.7}
+    [hidden]{display:none!important}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--text);color:var(--bg)}
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+    header{padding:88px 0 48px;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
+    h1{font-size:clamp(2.4rem,6vw,3.6rem);font-weight:600;line-height:1.02;letter-spacing:-.03em}
+    .lede{color:var(--muted);font-size:1.08rem;max-width:50ch;margin-top:14px}
+    .jump{font-size:15px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:2px;white-space:nowrap;transition:border-color .15s}
+    .jump:hover{border-color:var(--text)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .card{display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--line);text-decoration:none;color:inherit;transition:background-color .2s,border-color .2s}
+    .card:hover{background:var(--panel);border-color:var(--line-2)}
+    .art{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+    .art svg{display:block;width:100%;height:100%}
+    .art svg *{transition:transform .7s cubic-bezier(.2,.7,.1,1)}
+    .body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:6px;flex:1}
+    .tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+    .name{font-size:1.15rem;font-weight:600;letter-spacing:-.01em}
+    .desc{font-size:14.5px;color:var(--muted);flex:1}
+    .go{margin-top:10px;font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+    .card:hover .go{color:var(--text)}
+    .card:focus-visible{outline:1px solid var(--text);outline-offset:-1px}
+
+    /* hover motion, one small gesture per artwork */
+    .card:hover .m-dot{transform:translate(-26px,14px)}
+    .card:hover .m-col{transform:translateY(-6px)}
+    .card:hover .r-win{transform:translate(10px,-8px)}
+    .card:hover .r-cur{transform:translate(-34px,-22px)}
+    .card:hover .s-a{transform:rotate(-6deg)}
+    .card:hover .s-b{transform:rotate(7deg)}
+    .s-a,.s-b,.sk-flower,.b-ring{transform-box:fill-box;transform-origin:center}
+    .k-needle{transform-box:view-box;transform-origin:160px 100px}
+    .card:hover .k-needle{transform:rotate(196deg)}
+    .card:hover .sk-flower{transform:rotate(72deg)}
+    .card:hover .b-ring{transform:rotate(45deg)}
+
+    /* feedback wall */
+    #feedback{padding:112px 0 96px}
+    .fb-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(1.8rem,4vw,2.4rem);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+    .summary{display:flex;gap:28px;align-items:baseline;margin-top:12px;color:var(--muted);font-size:15px}
+    .summary b{font-family:var(--mono);font-weight:500;font-size:1.6rem;color:var(--text);margin-right:6px}
+    .wall{columns:3 300px;column-gap:16px;margin-top:28px}
+    .quote{break-inside:avoid;border:1px solid var(--line);padding:20px 20px 18px;margin:0 0 16px;background:var(--panel)}
+    .stars{display:flex;gap:3px;margin-bottom:12px}
+    .stars i{width:9px;height:9px;border:1px solid var(--line-2)}
+    .stars i.on{background:var(--star);border-color:var(--star)}
+    .quote p{font-size:15.5px;white-space:pre-line;overflow-wrap:anywhere}
+    .quote p:empty{display:none}
+    .quote footer{display:flex;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+    .quote footer span:last-child{font-family:var(--mono);font-size:12px;color:var(--faint)}
+    .empty{margin-top:28px;border:1px dashed var(--line-2);padding:28px;color:var(--muted);text-align:center}
+    .empty a{color:var(--text)}
+    .more{display:block;margin:8px auto 0;font:inherit;font-size:14px;font-weight:500;color:var(--text);background:transparent;border:1px solid var(--line-2);border-radius:2px;padding:10px 20px;cursor:pointer}
+    .more:hover{border-color:var(--text)}
+
+    .foot{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--faint);font-size:13px}
+
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:600px){
+      .wrap{padding:0 16px}
+      header{padding:56px 0 36px}
+      .grid{grid-template-columns:1fr}
+      #feedback{padding:80px 0 72px}
+    }
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <p class="eyebrow">Work in progress</p>
-      <h1>Website <em>drafts.</em></h1>
-      <p class="sub">A few design directions to browse. Tap any card to open the live draft in a new tab — placeholders and sample content are stand-ins for the real thing.</p>
+      <div>
+        <h1>Website drafts</h1>
+        <p class="lede">A few design directions to browse. Open any card to see the live draft — names and content are placeholders.</p>
+      </div>
+      <a class="jump" href="#feedback">What people said ↓</a>
     </header>
 
     <div class="grid">
 
+      <!-- Magazine: light -->
       <a class="card" href="https://axekiller24680-blip.github.io/portfolio-template/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-paper"><span class="big">Aa</span></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#EEE8DC"/>
+          <rect x="24" y="22" width="272" height="3" fill="#1A1A1A"/>
+          <rect x="24" y="30" width="272" height="1" fill="#1A1A1A"/>
+          <circle class="m-dot" cx="232" cy="104" r="46" fill="#E0441A"/>
+          <text x="22" y="150" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="124" fill="#1A1A1A">Aa</text>
+          <g class="m-col" fill="#1A1A1A" opacity=".28"><rect x="200" y="160" width="96" height="3"/><rect x="200" y="168" width="84" height="3"/><rect x="200" y="176" width="90" height="3"/></g>
+          <rect x="24" y="172" width="60" height="2" fill="#1A1A1A"/>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Magazine · Light</span>
           <span class="name">The Magazine — Light</span>
           <span class="desc">An editorial, newspaper-style personal site. Filterable work index, clean type, live theme toggle.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Magazine: dark -->
       <a class="card" href="https://axekiller24680-blip.github.io/portfolio-template/dark.html" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-ink"><span class="big">Aa</span></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#16161A"/>
+          <g class="m-col" fill="#D4CBB3" opacity=".22">
+            <rect x="24" y="40" width="4" height="120"/><rect x="36" y="40" width="4" height="120"/><rect x="48" y="40" width="4" height="120"/>
+          </g>
+          <circle class="m-dot" cx="238" cy="70" r="30" fill="none" stroke="#E0441A" stroke-width="2"/>
+          <text x="70" y="156" font-family="Fraunces, Georgia, serif" font-size="132" fill="#D4CBB3" letter-spacing="-4">N°</text>
+          <rect x="70" y="170" width="226" height="1" fill="#D4CBB3" opacity=".5"/>
+          <rect x="70" y="176" width="120" height="1" fill="#D4CBB3" opacity=".3"/>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Magazine · Dark</span>
           <span class="name">The Magazine — Dark</span>
           <span class="desc">The same editorial layout in a dark "ink" palette. Bold masthead, folio numbering, refined detail.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Retro desktop -->
       <a class="card" href="https://axekiller24680-blip.github.io/retro-portfolio/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-retro"><span class="big">▦</span></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#3C6E71"/>
+          <g fill="#E9E2CC" stroke="#2A2A2A" stroke-width="1.5">
+            <path d="M28 40h22l5 5h19v26H28z"/><path d="M28 96h22l5 5h19v26H28z"/><path d="M28 152h22l5 5h19v26H28z" opacity=".9"/>
+          </g>
+          <g class="r-win">
+            <rect x="104" y="34" width="190" height="130" fill="#E9E2CC" stroke="#2A2A2A" stroke-width="2"/>
+            <rect x="104" y="34" width="190" height="20" fill="#C65A3A" stroke="#2A2A2A" stroke-width="2"/>
+            <g stroke="#2A2A2A" stroke-width="1" opacity=".55"><path d="M140 40h118M140 44h118M140 48h118"/></g>
+            <rect x="110" y="39" width="10" height="10" fill="#E9E2CC" stroke="#2A2A2A" stroke-width="1.5"/>
+            <g fill="#2A2A2A" opacity=".75"><rect x="120" y="70" width="80" height="6"/><rect x="120" y="84" width="140" height="4"/><rect x="120" y="94" width="126" height="4"/><rect x="120" y="104" width="134" height="4"/></g>
+            <rect x="120" y="124" width="54" height="22" fill="#E9E2CC" stroke="#2A2A2A" stroke-width="2"/>
+          </g>
+          <path class="r-cur" d="M262 148l0 26 7-7 5 11 5-2-5-11 10 0z" fill="#fff" stroke="#111" stroke-width="1.5"/>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Retro OS</span>
           <span class="name">The Retro Desktop</span>
           <span class="desc">A vintage operating-system look — window frame, tabbed pages, and clickable folder icons for each section.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Scrapbook -->
       <a class="card" href="https://axekiller24680-blip.github.io/classic-template/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-scrap"><span class="big">✦</span></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#F2EBDD"/>
+          <g class="s-a"><rect x="42" y="36" width="118" height="132" fill="#fff" transform="rotate(-7 101 102)"/>
+            <rect x="52" y="46" width="98" height="86" fill="#9CC3B2" transform="rotate(-7 101 102)"/>
+            <circle cx="90" cy="80" r="14" fill="#F4D35E" transform="rotate(-7 101 102)"/></g>
+          <g class="s-b"><rect x="160" y="42" width="118" height="132" fill="#fff" transform="rotate(6 219 108)"/>
+            <rect x="170" y="52" width="98" height="86" fill="#D46A56" transform="rotate(6 219 108)"/>
+            <path d="M178 128l26-30 20 20 14-12 30 22z" fill="#8C3B2E" transform="rotate(6 219 108)"/></g>
+          <rect x="74" y="24" width="56" height="16" fill="#E8A0BF" opacity=".75" transform="rotate(-12 102 32)"/>
+          <rect x="196" y="30" width="56" height="16" fill="#8FB8DE" opacity=".75" transform="rotate(9 224 38)"/>
+          <path d="M282 150l4 9 10 1-8 6 3 10-9-6-9 6 3-10-8-6 10-1z" fill="#D46A56"/>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Scrapbook</span>
           <span class="name">The Classic Scrapbook</span>
           <span class="desc">A playful HyperCard-style deck — card-flip navigation, washi tape, stickers, and a retro window frame.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Telemetry -->
       <a class="card" href="https://axekiller24680-blip.github.io/racing-portfolio/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-race"><svg viewBox="0 0 120 88" aria-hidden="true"><path d="M31.7 78.3 A40 40 0 1 1 88.3 78.3" fill="none" stroke="#353A42" stroke-width="3"/><path d="M99.5 43.7 A40 40 0 0 1 88.3 78.3" fill="none" stroke="currentColor" stroke-width="3"/><line x1="60" y1="50" x2="82.1" y2="24.2" stroke="currentColor" stroke-width="3"/><circle cx="60" cy="50" r="4" fill="#ECEAE4"/></svg></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#0C0D0F"/>
+          <g fill="none" stroke="#1C1F24" stroke-width="1"><path d="M0 50h320M0 100h320M0 150h320M80 0v200M160 0v200M240 0v200"/></g>
+          <g transform="translate(0 6)">
+            <path d="M101.6 158.4A82 82 0 1 1 218.4 158.4" fill="none" stroke="#2A2E34" stroke-width="5"/>
+            <path d="M239.5 90.1A82 82 0 0 1 218.4 158.4" fill="none" stroke="#FF5A1F" stroke-width="5"/>
+            <g stroke="#ECEAE4" stroke-width="2"><path d="M107 152l-8 8M84 101H72M101 50l-8-8M160 30V18M219 50l8-8M248 101h-8"/></g>
+            <g transform="rotate(160 160 100)"><line class="k-needle" x1="160" y1="100" x2="222" y2="100" stroke="#FF5A1F" stroke-width="3"/></g>
+            <circle cx="160" cy="100" r="6" fill="#0C0D0F" stroke="#ECEAE4" stroke-width="1.5"/>
+          </g>
+          <g><rect x="92" y="186" width="14" height="5" fill="#34D27A"/><rect x="110" y="186" width="14" height="5" fill="#34D27A"/><rect x="128" y="186" width="14" height="5" fill="#34D27A"/><rect x="146" y="186" width="14" height="5" fill="#FF4538"/><rect x="164" y="186" width="14" height="5" fill="#FF4538"/><rect x="182" y="186" width="14" height="5" fill="#4D8DFF"/><rect x="200" y="186" width="14" height="5" fill="#22262B"/><rect x="218" y="186" width="14" height="5" fill="#22262B"/></g>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Motorsport · Dark &amp; Light</span>
           <span class="name">The Telemetry</span>
           <span class="desc">A race-engineering look — a live rev counter driven by scroll speed, shift-light progress bar, and a blueprint wind-tunnel animation.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Sketchbook -->
       <a class="card" href="https://axekiller24680-blip.github.io/sketchbook-portfolio/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-sketch"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="25" r="17"/><circle cx="74" cy="42" r="17"/><circle cx="65" cy="71" r="17"/><circle cx="35" cy="71" r="17"/><circle cx="26" cy="42" r="17"/><circle cx="50" cy="50" r="9" fill="currentColor"/></svg></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#FBF4EA"/>
+          <g fill="#2A2140" opacity=".08"><circle cx="30" cy="30" r="1.5"/><circle cx="60" cy="30" r="1.5"/><circle cx="90" cy="30" r="1.5"/><circle cx="30" cy="60" r="1.5"/><circle cx="60" cy="60" r="1.5"/><circle cx="290" cy="170" r="1.5"/><circle cx="260" cy="170" r="1.5"/><circle cx="290" cy="140" r="1.5"/></g>
+          <g class="sk-flower" fill="none" stroke="#D6437F" stroke-width="4" stroke-linecap="round">
+            <circle cx="112" cy="70" r="20"/><circle cx="140" cy="90" r="20"/><circle cx="130" cy="124" r="20"/><circle cx="94" cy="124" r="20"/><circle cx="84" cy="90" r="20"/>
+            <circle cx="112" cy="100" r="9" fill="#FFD96B" stroke="#C08A00"/>
+          </g>
+          <path d="M196 56l7 18 19 1-15 12 5 19-16-11-16 11 5-19-15-12 19-1z" fill="none" stroke="#C08A00" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M184 150c16-10 30 8 46-2s28 6 46-4" fill="none" stroke="#7D52D6" stroke-width="4" stroke-linecap="round"/>
+          <path d="M252 72c10-4 22 2 24 12" fill="none" stroke="#16946B" stroke-width="4" stroke-linecap="round"/>
+        </svg></div>
         <div class="body">
           <span class="tag">Personal site · Sketchbook · Light</span>
           <span class="name">The Sketchbook</span>
           <span class="desc">A hand-drawn, doodle-filled site — wiggly animated illustrations, sticker skills, scrolling ribbons, and a draw-your-own doodle pad.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
+      <!-- Bijal Sang Naach -->
       <a class="card" href="https://bijalsangnaach-draft.vercel.app/#/" target="_blank" rel="noopener noreferrer">
-        <div class="thumb t-bijal"><span class="big">नाच</span></div>
+        <div class="art"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#1C1220"/>
+          <g class="b-ring" fill="none" stroke="#D4A05C">
+            <circle cx="160" cy="100" r="78" stroke-width="1" opacity=".35" stroke-dasharray="2 6"/>
+            <circle cx="160" cy="100" r="62" stroke-width="1.2" opacity=".6"/>
+            <g stroke-width="1.2" opacity=".75">
+              <circle cx="160" cy="38" r="5"/><circle cx="222" cy="100" r="5"/><circle cx="160" cy="162" r="5"/><circle cx="98" cy="100" r="5"/>
+              <circle cx="203.8" cy="56.2" r="5"/><circle cx="203.8" cy="143.8" r="5"/><circle cx="116.2" cy="143.8" r="5"/><circle cx="116.2" cy="56.2" r="5"/>
+            </g>
+          </g>
+          <text x="160" y="114" text-anchor="middle" font-family="Fraunces, 'Kohinoor Devanagari', 'Noto Serif Devanagari', serif" font-size="40" fill="#E6BD7F">नाच</text>
+        </svg></div>
         <div class="body">
           <span class="tag">Client draft · Dance school</span>
           <span class="name">Bijal Sang Naach</span>
           <span class="desc">A Kathak dance school site — elegant dark-and-gold styling, class booking, and a photo-led story.</span>
-          <span class="go">View draft ↗</span>
+          <span class="go">View draft →</span>
         </div>
       </a>
 
     </div>
 
-    <p class="note">These are drafts for preview only. Content, images, and copy are placeholders unless noted. Designs adapt fully to phones and tablets.</p>
+    <section id="feedback" aria-labelledby="fbTitle">
+      <div class="fb-head">
+        <div>
+          <h2 id="fbTitle">What people said</h2>
+          <div class="summary" id="summary" hidden><span><b id="avg">–</b>average</span><span><b id="count">0</b>responses</span></div>
+        </div>
+        <a class="jump" href="https://axekiller24680-blip.github.io/feedback/" target="_blank" rel="noopener">Leave feedback ↗</a>
+      </div>
+      <div class="wall" id="wall" aria-live="polite"></div>
+      <p class="empty" id="empty" hidden>No feedback yet — <a href="https://axekiller24680-blip.github.io/feedback/" target="_blank" rel="noopener">be the first</a>.</p>
+      <button class="more" id="more" type="button" hidden>Show more</button>
+    </section>
   </div>
+
+  <div class="foot"><div class="wrap">Drafts are previews — content and images are placeholders unless noted.</div></div>
+
+  <script>
+    (function () {
+      var API = 'https://feedback-wall-sepia.vercel.app/api/feedback';
+      var PAGE = 9;
+      var wall = document.getElementById('wall');
+      var empty = document.getElementById('empty');
+      var more = document.getElementById('more');
+      var items = [], shown = 0;
+
+      function fmtDate(iso) {
+        var d = new Date(iso);
+        return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+      function card(it) {
+        var el = document.createElement('figure');
+        el.className = 'quote';
+        if (it.rating) {
+          var stars = document.createElement('div');
+          stars.className = 'stars';
+          stars.setAttribute('aria-label', it.rating + ' out of 5');
+          for (var i = 1; i <= 5; i++) {
+            var s = document.createElement('i');
+            if (i <= it.rating) s.className = 'on';
+            stars.appendChild(s);
+          }
+          el.appendChild(stars);
+        }
+        var p = document.createElement('p');
+        p.textContent = it.feedback || '';
+        el.appendChild(p);
+        var f = document.createElement('footer');
+        var who = document.createElement('span');
+        who.textContent = it.name ? '— ' + it.name : '— Anonymous';
+        var when = document.createElement('span');
+        when.textContent = fmtDate(it.date);
+        f.appendChild(who); f.appendChild(when);
+        el.appendChild(f);
+        return el;
+      }
+      function render() {
+        items.slice(shown, shown + PAGE).forEach(function (it) { wall.appendChild(card(it)); });
+        shown = Math.min(items.length, shown + PAGE);
+        more.hidden = shown >= items.length;
+      }
+      more.addEventListener('click', render);
+
+      fetch(API).then(function (r) { return r.ok ? r.json() : { items: [] }; }).then(function (data) {
+        items = (data.items || []).filter(function (it) { return it && (it.rating || it.feedback); });
+        if (!items.length) { empty.hidden = false; return; }
+        var rated = items.filter(function (it) { return it.rating; });
+        if (rated.length) {
+          var avg = rated.reduce(function (a, it) { return a + it.rating; }, 0) / rated.length;
+          document.getElementById('avg').textContent = avg.toFixed(1);
+        }
+        document.getElementById('count').textContent = items.length;
+        document.getElementById('summary').hidden = false;
+        render();
+      }).catch(function () {
+        empty.textContent = 'Feedback couldn’t be loaded right now.';
+        empty.hidden = false;
+      });
+    })();
+  </script>
 </body>
 </html>
