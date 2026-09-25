@@ -78,6 +78,24 @@
     .more:hover{border-color:var(--text)}
 
     .foot{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--faint);font-size:13px}
+    .foot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .linkbtn{font:inherit;color:var(--faint);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+    .linkbtn:hover{color:var(--text)}
+
+    /* manage mode (owner only; needs the admin key) */
+    .manage{margin-top:22px;border:1px solid var(--line-2);background:var(--panel);padding:16px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+    .manage b{font-weight:600;font-size:15px;margin-right:auto}
+    .manage input{font:inherit;font-size:15px;color:var(--text);background:#1B1E22;border:1px solid var(--line);border-radius:2px;padding:9px 12px;min-width:220px}
+    .manage input:focus{outline:none;border-color:var(--text)}
+    .btn{font:inherit;font-size:14px;font-weight:500;color:var(--text);background:transparent;border:1px solid var(--line-2);border-radius:2px;padding:9px 16px;cursor:pointer}
+    .btn:hover{border-color:var(--text)}
+    .btn.solid{background:var(--text);color:var(--bg);border-color:var(--text)}
+    .btn.solid:hover{background:transparent;color:var(--text)}
+    .manage-msg{width:100%;font-size:13px;color:var(--muted);min-height:1em}
+    .manage-msg.err{color:#E8664A}
+    .remove{margin-top:12px;font:inherit;font-size:13px;font-weight:500;color:#E8664A;background:transparent;border:1px solid rgba(232,102,74,.45);border-radius:2px;padding:6px 12px;cursor:pointer}
+    .remove:hover{background:#E8664A;color:var(--bg);border-color:#E8664A}
+    .remove:disabled{opacity:.5;cursor:wait}
 
     @media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media (max-width:600px){
@@ -262,27 +280,47 @@
         </div>
         <a class="jump" href="https://axekiller24680-blip.github.io/feedback/" target="_blank" rel="noopener">Leave feedback ↗</a>
       </div>
+
+      <form class="manage" id="manage" hidden autocomplete="off">
+        <b id="manageTitle">Manage feedback</b>
+        <span id="lockedBits">
+          <input type="password" id="adminKey" placeholder="Admin key" aria-label="Admin key" autocomplete="current-password">
+          <button class="btn solid" type="submit">Unlock</button>
+        </span>
+        <button class="btn" type="button" id="lockBtn" hidden>Lock</button>
+        <button class="btn" type="button" id="closeManage">Close</button>
+        <span class="manage-msg" id="manageMsg" role="status" aria-live="polite"></span>
+      </form>
+
       <div class="wall" id="wall" aria-live="polite"></div>
       <p class="empty" id="empty" hidden>No feedback yet — <a href="https://axekiller24680-blip.github.io/feedback/" target="_blank" rel="noopener">be the first</a>.</p>
       <button class="more" id="more" type="button" hidden>Show more</button>
     </section>
   </div>
 
-  <div class="foot"><div class="wrap">Drafts are previews — content and images are placeholders unless noted.</div></div>
+  <div class="foot"><div class="wrap"><span>Drafts are previews — content and images are placeholders unless noted.</span><button class="linkbtn" type="button" id="openManage">Manage feedback</button></div></div>
 
   <script>
     (function () {
       var API = 'https://feedback-wall-sepia.vercel.app/api/feedback';
       var PAGE = 9;
+      var KEY_STORE = 'drafts-admin-key';
       var wall = document.getElementById('wall');
       var empty = document.getElementById('empty');
       var more = document.getElementById('more');
-      var items = [], shown = 0;
+      var manage = document.getElementById('manage');
+      var keyInput = document.getElementById('adminKey');
+      var lockedBits = document.getElementById('lockedBits');
+      var lockBtn = document.getElementById('lockBtn');
+      var msg = document.getElementById('manageMsg');
+      var items = [], shown = 0, adminKey = null;
 
       function fmtDate(iso) {
         var d = new Date(iso);
         return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
       }
+      function say(text, isErr) { msg.textContent = text; msg.className = 'manage-msg' + (isErr ? ' err' : ''); }
+
       function card(it) {
         var el = document.createElement('figure');
         el.className = 'quote';
@@ -307,30 +345,109 @@
         when.textContent = fmtDate(it.date);
         f.appendChild(who); f.appendChild(when);
         el.appendChild(f);
+        if (adminKey && it.id) {
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.className = 'remove';
+          rm.textContent = 'Remove';
+          rm.addEventListener('click', function () { removeItem(it, rm); });
+          el.appendChild(rm);
+        }
         return el;
       }
-      function render() {
+
+      function summarise() {
+        var rated = items.filter(function (it) { return it.rating; });
+        document.getElementById('avg').textContent = rated.length
+          ? (rated.reduce(function (a, it) { return a + it.rating; }, 0) / rated.length).toFixed(1) : '–';
+        document.getElementById('count').textContent = items.length;
+        document.getElementById('summary').hidden = !items.length;
+        empty.hidden = !!items.length;
+      }
+      function render(reset) {
+        if (reset) { wall.textContent = ''; shown = 0; }
         items.slice(shown, shown + PAGE).forEach(function (it) { wall.appendChild(card(it)); });
         shown = Math.min(items.length, shown + PAGE);
         more.hidden = shown >= items.length;
+        summarise();
       }
-      more.addEventListener('click', render);
+      more.addEventListener('click', function () { render(false); });
 
-      fetch(API).then(function (r) { return r.ok ? r.json() : { items: [] }; }).then(function (data) {
-        items = (data.items || []).filter(function (it) { return it && (it.rating || it.feedback); });
-        if (!items.length) { empty.hidden = false; return; }
-        var rated = items.filter(function (it) { return it.rating; });
-        if (rated.length) {
-          var avg = rated.reduce(function (a, it) { return a + it.rating; }, 0) / rated.length;
-          document.getElementById('avg').textContent = avg.toFixed(1);
-        }
-        document.getElementById('count').textContent = items.length;
-        document.getElementById('summary').hidden = false;
-        render();
-      }).catch(function () {
-        empty.textContent = 'Feedback couldn’t be loaded right now.';
-        empty.hidden = false;
+      function load(fresh) {
+        return fetch(API + (fresh ? '?fresh=' + Date.now() : ''))
+          .then(function (r) { return r.ok ? r.json() : { items: [] }; })
+          .then(function (data) {
+            items = (data.items || []).filter(function (it) { return it && (it.rating || it.feedback); });
+            render(true);
+          })
+          .catch(function () {
+            empty.textContent = 'Feedback couldn\u2019t be loaded right now.';
+            empty.hidden = false;
+          });
+      }
+
+      function removeItem(it, btn) {
+        var label = it.name ? it.name + '\u2019s feedback' : 'this anonymous feedback';
+        if (!confirm('Remove ' + label + ' from the wall? This can\u2019t be undone.')) return;
+        btn.disabled = true;
+        fetch(API + '?id=' + encodeURIComponent(it.id), { method: 'DELETE', headers: { 'X-Admin-Key': adminKey } })
+          .then(function (r) {
+            if (r.status === 401) { lock(); say('That key is no longer valid — unlock again.', true); return; }
+            if (!r.ok && r.status !== 404) throw new Error('HTTP ' + r.status);
+            items = items.filter(function (x) { return x.id !== it.id; });
+            render(true);
+            say('Removed. Visitors will stop seeing it within about 20 seconds.');
+          })
+          .catch(function () { btn.disabled = false; say('Couldn\u2019t remove it — try again.', true); });
+      }
+
+      function setUnlocked(on) {
+        lockedBits.hidden = on;
+        lockBtn.hidden = !on;
+        document.getElementById('manageTitle').textContent = on ? 'Managing feedback' : 'Manage feedback';
+      }
+      function unlock(key, quiet) {
+        if (!quiet) say('Checking…');
+        return fetch(API + '?check&t=' + Date.now(), { headers: { 'X-Admin-Key': key } }).then(function (r) {
+          if (r.ok) {
+            adminKey = key;
+            try { sessionStorage.setItem(KEY_STORE, key); } catch (e) {}
+            keyInput.value = '';
+            setUnlocked(true);
+            say('Unlocked for this tab. Each card now has a Remove button.');
+            return load(true);
+          }
+          if (r.status === 503) say('Removal isn\u2019t set up yet — add ADMIN_KEY in the Vercel project first.', true);
+          else say('That key didn\u2019t work.', true);
+          try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+        }).catch(function () { say('Couldn\u2019t reach the server — try again.', true); });
+      }
+      function lock() {
+        adminKey = null;
+        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+        setUnlocked(false);
+        say('');
+        render(true);
+      }
+
+      document.getElementById('openManage').addEventListener('click', function () {
+        manage.hidden = false;
+        manage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!adminKey) keyInput.focus();
       });
+      document.getElementById('closeManage').addEventListener('click', function () { lock(); manage.hidden = true; });
+      lockBtn.addEventListener('click', lock);
+      manage.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var key = keyInput.value.trim();
+        if (key) unlock(key);
+      });
+
+      load(false);
+      // stay unlocked across reloads in the same tab only
+      var saved = null;
+      try { saved = sessionStorage.getItem(KEY_STORE); } catch (e) {}
+      if (saved) { manage.hidden = false; unlock(saved, true); }
     })();
   </script>
 </body>
